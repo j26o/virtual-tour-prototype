@@ -1,9 +1,12 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three'
-import { Sky, Stats, Environment, Grid, useHelper, OrbitControls } from '@react-three/drei'
+import { Sky, Stats, Environment, Grid, OrbitControls } from '@react-three/drei'
 import { EffectComposer, Bloom, DepthOfField } from '@react-three/postprocessing'
+
+import { Physics, RigidBody } from '@react-three/rapier'
+
 
 import * as THREE from 'three'
 
@@ -41,7 +44,7 @@ function Floor() {
         normalMap={normalMap}
         roughnessMap={roughnessMap}
         aoMap={aoMap}
-        // displacementScale={2} // Increased from 0.2 to 2
+        displacementScale={0} // Increased from 0.2 to 2
         normalScale={new THREE.Vector2(1, 1)} // Added normal map intensity
         roughness={0.8} // Added roughness value
         metalness={0.2} // Added slight metalness for better material definition
@@ -85,12 +88,26 @@ export default function Scene() {
 					}}
 				/>
 
-				<Suspense fallback={null}>
-					<Floor />
-					<Fox />
-					<SoccerBall />
-					<OrbitControls />
-				</Suspense>
+				<Physics debug>
+
+					<Suspense fallback={null}>
+						<RigidBody 
+							type="fixed" 
+							colliders="cuboid"
+							position={[0, 0.8, 0]}
+						>
+							<Floor />
+						</RigidBody>
+						<RigidBody colliders="hull" mass={1}>
+							<Fox />
+						</RigidBody>
+						<RigidBody colliders="ball" mass={0.5} restitution={0.7} scale={1}>
+							<SoccerBall />
+						</RigidBody>
+						<OrbitControls />
+					</Suspense>
+
+				</Physics>
 
 				{/* Post-processing effects */}
 				<EffectComposer>
