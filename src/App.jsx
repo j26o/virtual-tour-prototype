@@ -1,14 +1,7 @@
-import { useState } from 'react'
-import './App.css'
+import Scene from './components/Scene'
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      
-    </>
-  )
+  return <Scene />
 }
 
 export default App
