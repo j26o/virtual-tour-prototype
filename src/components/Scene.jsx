@@ -6,21 +6,24 @@ import { EffectComposer, Bloom, DepthOfField } from '@react-three/postprocessing
 import { Physics } from '@react-three/rapier'
 import * as THREE from 'three'
 
-import { Fox } from './Fox'
 import { Floor } from './Floor'
 import { SoccerBall } from './SoccerBall'
-
+import { FoxController } from './FoxController'
 
 export default function Scene() {
+
+	const keyboardMap = [
+		{ name: 'forward', keys: ['ArrowUp', 'KeyW'] },
+		{ name: 'backward', keys: ['ArrowDown', 'KeyS'] },
+		{ name: 'leftward', keys: ['ArrowLeft', 'KeyA'] },
+		{ name: 'rightward', keys: ['ArrowRight', 'KeyD'] },
+		{ name: 'jump', keys: ['Space'] },
+		{ name: 'run', keys: ['Shift'] },
+	]
+
   return (
 		<KeyboardControls
-			map={ [
-					{ name: 'forward', keys: [ 'ArrowUp', 'KeyW' ] },
-					{ name: 'backward', keys: [ 'ArrowDown', 'KeyS' ] },
-					{ name: 'leftward', keys: [ 'ArrowLeft', 'KeyA' ] },
-					{ name: 'rightward', keys: [ 'ArrowRight', 'KeyD' ] },
-					{ name: 'jump', keys: [ 'Space' ] },
-			] }
+			map={ keyboardMap }
     >
 			<div style={{ width: '100vw', height: '100vh' }}>
 				<Canvas camera={{ position: [0, 5, 10], fov: 45 }}>
@@ -55,16 +58,14 @@ export default function Scene() {
 						}}
 					/>
 
-					<OrbitControls />
+					{/* <OrbitControls /> */}
 
-					<Physics debug>
-
+					<Physics>
 						<Suspense fallback={null}>
-							<Fox />
 							<SoccerBall />
+							<FoxController />
 							<Floor />
 						</Suspense>
-
 					</Physics>
 
 					{/* Post-processing effects */}
